@@ -1,0 +1,1616 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학교 안 가고 돈 받기 💸</title>
+
+<style>
+:root {
+  --green:#43b777;
+  --dark:#246544;
+  --light:#e6f7eb;
+  --bg:#f2fbf4;
+  --white:#fff;
+  --line:#ccebd5;
+  --text:#315b42;
+  --muted:#7da28b;
+  --yellow:#ffce60;
+  --red:#e86a64;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  font-family:"Malgun Gothic","Apple SD Gothic Neo",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,input {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+  transition:transform .2s,background .2s;
+}
+
+button:active:not(:disabled) {
+  transform:scale(.95);
+}
+
+button:disabled {
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline:3px solid #7bce99;
+  outline-offset:2px;
+}
+
+.hidden {display:none!important}
+
+.screen {
+  display:none;
+}
+
+.screen.active {
+  display:block;
+}
+
+.container {
+  width:min(1000px,94%);
+  margin:auto;
+}
+
+.card {
+  background:white;
+  border:2px solid var(--line);
+  padding:22px;
+  border-radius:22px;
+  box-shadow:0 6px 0 #d6ebdc;
+  margin-bottom:20px;
+}
+
+h1,h2,h3,p {
+  overflow-wrap:anywhere;
+}
+
+h2 {
+  font-size:21px;
+  margin:0 0 16px;
+}
+
+.muted {
+  font-size:13px;
+  color:var(--muted);
+}
+
+.btn {
+  border:0;
+  padding:14px 19px;
+  border-radius:13px;
+  background:var(--green);
+  color:white;
+  font-weight:800;
+}
+
+.btn:hover:not(:disabled) {
+  background:#35a968;
+}
+
+.btn-light {
+  background:var(--light);
+  color:var(--dark);
+}
+
+.btn-light:hover:not(:disabled) {
+  background:#d1eedb;
+}
+
+.btn-yellow {
+  background:var(--yellow);
+  color:#795a1f;
+}
+
+.btn-red {
+  background:#ffe5e2;
+  color:#ba514c;
+}
+
+.btn-small {
+  font-size:12px;
+  padding:9px 12px;
+}
+
+.full {width:100%}
+
+.row {
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+label {
+  display:block;
+  font-weight:700;
+  font-size:13px;
+  margin:15px 0 8px;
+}
+
+input[type="number"] {
+  width:100%;
+  padding:13px;
+  border:2px solid var(--line);
+  border-radius:12px;
+  color:var(--dark);
+  background:#fbfffc;
+}
+
+/* 경고 배너 */
+
+.warning-banner {
+  background:#fff2d8;
+  color:#a04f37;
+  padding:13px;
+  text-align:center;
+  font-weight:900;
+  border-bottom:2px solid #f1cf91;
+  font-size:14px;
+}
+
+/* 홈 화면 */
+
+#home {
+  min-height:100vh;
+  background:linear-gradient(150deg,#d8f5e1,#f7fff8 70%);
+}
+
+.home-content {
+  min-height:calc(100vh - 50px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:28px;
+}
+
+.home-icon {
+  font-size:90px;
+  line-height:1.5;
+}
+
+.home-content h1 {
+  color:var(--dark);
+  font-size:clamp(31px,6vw,48px);
+  margin:12px 0;
+}
+
+.home-content p {
+  line-height:1.9;
+  color:#6b9e7c;
+}
+
+.home-content .btn {
+  margin-top:24px;
+  padding:17px 42px;
+  font-size:17px;
+  box-shadow:0 8px 20px #4aab7340;
+}
+
+.home-tags {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:35px;
+}
+
+.home-tags span {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:25px;
+  padding:10px 13px;
+  font-size:12px;
+}
+
+/* 게임 헤더 */
+
+header {
+  background:white;
+  border-bottom:2px solid var(--line);
+}
+
+.header-inner {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:15px 0;
+}
+
+.logo {
+  font-weight:900;
+  color:var(--dark);
+}
+
+main {
+  padding:25px 0 55px;
+}
+
+/* 돈 현황 */
+
+.money-card {
+  background:linear-gradient(125deg,#9bdfae,#e6f8d6);
+  text-align:center;
+  border:0;
+}
+
+.money-number {
+  font-size:clamp(35px,6vw,54px);
+  font-weight:900;
+  color:#215b37;
+  margin:12px 0;
+}
+
+.money-number.pop {
+  animation:moneyPop .5s ease;
+}
+
+@keyframes moneyPop {
+  0%{transform:scale(1)}
+  50%{transform:scale(1.16)}
+  100%{transform:scale(1)}
+}
+
+.metrics {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:20px;
+}
+
+.metric {
+  background:#ffffffb9;
+  padding:15px;
+  border-radius:14px;
+}
+
+.metric strong {
+  display:block;
+  margin-top:7px;
+  font-size:clamp(15px,3vw,21px);
+}
+
+/* 게임 시계 */
+
+.clock-card {
+  text-align:center;
+}
+
+.clock {
+  width:175px;
+  height:175px;
+  border-radius:50%;
+  border:9px solid #8ed2a6;
+  background:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  margin:20px auto;
+  box-shadow:0 9px 20px #75bd9240;
+}
+
+.clock-time {
+  font-size:39px;
+  font-weight:900;
+  color:var(--dark);
+}
+
+.clock-day {
+  font-size:12px;
+  color:var(--muted);
+}
+
+.time-progress {
+  height:13px;
+  border-radius:20px;
+  background:#d8f0df;
+  overflow:hidden;
+  margin-top:20px;
+}
+
+.time-fill {
+  height:100%;
+  background:var(--green);
+  width:0;
+  transition:width .3s;
+}
+
+/* 침실 */
+
+.bedroom {
+  min-height:260px;
+  background:linear-gradient(#d6f1fc 0%,#edf8e6 63%,#b6dba5 64%);
+  border-radius:20px;
+  border:5px solid #e2f4e7;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.bedroom.night {
+  background:linear-gradient(#233957 0%,#3b567a 63%,#4a745c 64%);
+  color:white;
+}
+
+.room-window {
+  position:absolute;
+  right:14px;
+  top:12px;
+  font-size:42px;
+}
+
+.bed {
+  font-size:90px;
+  display:inline-block;
+}
+
+.bed.sleeping {
+  animation:sleepFloat 3s ease-in-out infinite;
+}
+
+@keyframes sleepFloat {
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+.sleep-text {
+  font-weight:800;
+  font-size:15px;
+  margin-top:10px;
+  background:#ffffffcc;
+  color:var(--dark);
+  padding:10px 15px;
+  border-radius:20px;
+}
+
+.bedroom.night .sleep-text {
+  background:#ffffffdd;
+}
+
+.event-card {
+  background:#e9f8ee;
+  border:1px solid var(--line);
+  padding:15px;
+  border-radius:14px;
+  margin-top:15px;
+  font-size:14px;
+  line-height:1.7;
+}
+
+/* 주간 진행 */
+
+.week-days {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:7px;
+}
+
+.week-day {
+  text-align:center;
+  background:#e7f7ec;
+  border-radius:11px;
+  padding:11px 4px;
+  color:#6b967b;
+  font-size:12px;
+}
+
+.week-day.active {
+  background:var(--green);
+  color:white;
+  font-weight:900;
+}
+
+.week-day.finished {
+  background:#b8e6c6;
+  color:#285e3b;
+}
+
+.week-day strong {
+  display:block;
+  font-size:18px;
+  margin-bottom:4px;
+}
+
+/* 기록 */
+
+.log-item {
+  padding:13px 2px;
+  border-bottom:1px solid var(--line);
+  font-size:13px;
+  line-height:1.7;
+}
+
+.log-item:last-child {
+  border:0;
+}
+
+.log-time {
+  color:var(--muted);
+  font-size:11px;
+  margin-right:8px;
+}
+
+/* 팝업 */
+
+.overlay {
+  position:fixed;
+  inset:0;
+  z-index:50;
+  background:#204e36ba;
+  backdrop-filter:blur(5px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:18px;
+}
+
+.modal {
+  background:white;
+  border-radius:24px;
+  padding:25px;
+  width:min(465px,100%);
+  text-align:center;
+  border:3px solid #91d6a9;
+  animation:modalPop .3s ease-out;
+  max-height:92vh;
+  overflow-y:auto;
+}
+
+@keyframes modalPop {
+  from{opacity:0;transform:scale(.85)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.modal-icon {
+  font-size:70px;
+  margin:5px 0 15px;
+}
+
+.modal h2 {
+  color:var(--dark);
+}
+
+.modal p {
+  color:#6b9479;
+  line-height:1.8;
+}
+
+.modal-actions {
+  display:grid;
+  gap:10px;
+  margin-top:20px;
+}
+
+.device-options {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:15px 0;
+}
+
+.device-option {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:#eff9f1;
+  border:2px solid var(--line);
+  border-radius:14px;
+  padding:12px 6px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.device-option:has(input:checked) {
+  border-color:var(--green);
+  background:#d5f3df;
+}
+
+.device-option input {
+  accent-color:var(--green);
+}
+
+.device-emoji {
+  font-size:34px;
+}
+
+.toast {
+  position:fixed;
+  bottom:23px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#2a7349;
+  color:white;
+  padding:13px 20px;
+  border-radius:28px;
+  font-size:13px;
+  z-index:100;
+  max-width:90%;
+  text-align:center;
+}
+
+/* 떠다니는 돈 */
+
+.floating-money {
+  position:fixed;
+  font-size:28px;
+  pointer-events:none;
+  z-index:90;
+  animation:floatMoney 1s ease-out forwards;
+}
+
+@keyframes floatMoney {
+  0% {
+    transform:translateY(0) scale(.5);
+    opacity:1;
+  }
+  100% {
+    transform:translateY(-120px) scale(1.6);
+    opacity:0;
+  }
+}
+
+footer {
+  text-align:center;
+  color:#94b49d;
+  font-size:12px;
+  padding:25px;
+}
+
+@media(max-width:700px) {
+  .grid {
+    grid-template-columns:1fr;
+    gap:0;
+  }
+
+  .card {
+    padding:17px;
+  }
+
+  .metric {
+    padding:10px;
+  }
+
+  .metric strong {
+    font-size:14px;
+  }
+
+  .home-icon {
+    font-size:65px;
+  }
+
+  .week-days {
+    gap:3px;
+  }
+
+  .week-day {
+    padding:9px 2px;
+    font-size:10px;
+  }
+
+  .week-day strong {
+    font-size:14px;
+  }
+
+  .device-emoji {
+    font-size:27px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation-duration:.01ms!important;
+    transition-duration:.01ms!important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="warning-banner">
+  ⚠️ 실제로 따라하지 마시오! 무단결석을 권장하지 않는 가상 시뮬레이션입니다.
+</div>
+
+<!-- 홈 화면 -->
+
+<section id="home" class="screen active">
+  <div class="home-content">
+
+    <div class="home-icon">😴🛏️💸</div>
+
+    <h1>학교 안 가고 돈 받기</h1>
+
+    <p>
+      매일 교통비 2,000원이 사라진다고?!<br>
+      학교에 안 가면 돈이 얼마나 남을까?<br>
+      웃기지만 현실에선 따라 하면 안 되는<br>
+      7일간의 가상 결석 시뮬레이터!
+    </p>
+
+    <button class="btn" id="startBtn">
+      💤 시뮬레이션 시작하기
+    </button>
+
+    <div class="home-tags">
+      <span>⏰ 알람 끄기</span>
+      <span>💰 가상 교통비 적립</span>
+      <span>📞 담임 선생님 연락</span>
+      <span>🌙 저녁 알람 설정</span>
+    </div>
+
+    <p class="muted">
+      실제로 돈을 지급하지 않으며 학교 출석의 중요성을 함께 생각하는 게임입니다.
+    </p>
+
+  </div>
+</section>
+
+<!-- 게임 화면 -->
+
+<section id="game" class="screen">
+
+  <header>
+    <div class="container header-inner">
+      <div class="logo">💚 학교 안 가고 돈 받기</div>
+
+      <button class="btn btn-light btn-small"
+              id="resetBtn">
+        🔄 다시 시작
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 적립된 금액 -->
+
+    <section class="card money-card">
+
+      <p>💰 나의 가상 절약 금액</p>
+
+      <div class="money-number" id="totalMoney">0원</div>
+
+      <div class="metrics">
+        <div class="metric">
+          <span class="muted">교통비 절약</span>
+          <strong id="transportMoney">0원</strong>
+        </div>
+
+        <div class="metric">
+          <span class="muted">알람 보너스</span>
+          <strong id="alarmMoney">0원</strong>
+        </div>
+
+        <div class="metric">
+          <span class="muted">결석 횟수</span>
+          <strong id="absenceCount">0일</strong>
+        </div>
+      </div>
+
+      <p class="muted">
+        평일 결석 하루당 2,000원, 알람 해제 1회당 100원
+      </p>
+
+    </section>
+
+    <div class="grid">
+
+      <!-- 게임 시간 -->
+
+      <section class="card clock-card">
+
+        <h2>⏰ 시뮬레이션 시계</h2>
+
+        <div class="clock">
+          <div class="clock-time" id="clockTime">06:00</div>
+          <div class="clock-day" id="clockDay">월요일</div>
+        </div>
+
+        <p class="muted">
+          현실 1.5초 = 게임 속 1시간
+        </p>
+
+        <div class="time-progress">
+          <div class="time-fill" id="timeFill"></div>
+        </div>
+
+        <p class="muted" id="timeStatus">
+          월요일 아침이에요.
+        </p>
+
+      </section>
+
+      <!-- 침실 -->
+
+      <section class="card">
+        <h2>🛏️ 나의 침실</h2>
+
+        <div class="bedroom" id="bedroom">
+
+          <div class="room-window" id="roomWindow">☀️</div>
+
+          <div class="bed sleeping" id="bed">
+            😴🛏️
+          </div>
+
+          <div class="sleep-text" id="sleepText">
+            아침부터 꿀잠 중... 💤
+          </div>
+
+        </div>
+
+        <div class="event-card" id="eventMessage">
+          🌞 오늘도 새로운 아침이 시작되었어요!
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 주간 진행 -->
+
+    <section class="card">
+      <h2>📅 7일 생존 캘린더</h2>
+
+      <div class="week-days" id="weekDays"></div>
+
+      <p class="muted">
+        평일 5일을 전부 쉬면 가상 교통비 절약액은 10,000원입니다.
+        알람 보너스는 별도로 계산됩니다.
+      </p>
+    </section>
+
+    <!-- 기록 -->
+
+    <section class="card">
+      <h2>📜 오늘의 사건 일지</h2>
+      <div id="gameLogs"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    💚 학교 안 가고 돈 받기 · 교육용 가상 시뮬레이터
+  </footer>
+
+</section>
+
+<!-- 게임 이벤트 팝업 -->
+
+<div class="overlay hidden" id="eventModal"
+     role="dialog" aria-modal="true"
+     aria-label="게임 이벤트">
+
+  <div class="modal">
+
+    <div class="modal-icon" id="modalIcon">⏰</div>
+
+    <h2 id="modalTitle">알람이 울립니다!</h2>
+
+    <p id="modalDescription"></p>
+
+    <!-- 알람 설정에만 보이는 입력 -->
+
+    <div id="alarmSettings" class="hidden">
+
+      <label for="alarmHour">내일 아침 알람 시간</label>
+
+      <input type="number" id="alarmHour"
+             min="5" max="9" step="1" value="7">
+
+      <p class="muted">
+        오전 5시부터 9시까지 설정할 수 있어요.
+      </p>
+
+      <div class="device-options">
+
+        <label class="device-option">
+          <span class="device-emoji">📱</span>
+          스마트폰
+          <input type="checkbox" value="phone" checked>
+        </label>
+
+        <label class="device-option">
+          <span class="device-emoji">⏰</span>
+          탁상시계
+          <input type="checkbox" value="clock" checked>
+        </label>
+
+        <label class="device-option">
+          <span class="device-emoji">⌚</span>
+          스마트워치
+          <input type="checkbox" value="watch" checked>
+        </label>
+
+      </div>
+
+    </div>
+
+    <div class="modal-actions" id="modalActions"></div>
+
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"
+     role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* =============================
+   1. 기본 설정
+============================= */
+
+const $ = id => document.getElementById(id);
+
+const SAVE_KEY = "school-skip-simulator-v1";
+
+const WEEKDAYS = [
+  "월요일","화요일","수요일","목요일",
+  "금요일","토요일","일요일"
+];
+
+const DEVICES = {
+  phone:{emoji:"📱",name:"스마트폰"},
+  clock:{emoji:"⏰",name:"탁상시계"},
+  watch:{emoji:"⌚",name:"스마트워치"}
+};
+
+const DAILY_TRANSPORT = 2000;
+const ALARM_REWARD = 100;
+const HOUR_MS = 1500;
+
+function newState() {
+  return {
+    day:1,
+    hour:6,
+    transport:0,
+    alarmMoney:0,
+    absences:0,
+    attendance:{},
+    alarmPlan:{
+      hour:7,
+      devices:["phone","clock","watch"]
+    },
+    events:[],
+    pending:null,
+    queue:[],
+    finished:false,
+    logs:[]
+  };
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return newState();
+
+    const s = JSON.parse(raw);
+
+    if(!s || !Number.isInteger(s.day) ||
+       s.day<1 || s.day>8 ||
+       !Number.isInteger(s.hour) ||
+       s.hour<0 || s.hour>23 ||
+       !Number.isSafeInteger(s.transport) ||
+       !Number.isSafeInteger(s.alarmMoney) ||
+       !Array.isArray(s.logs) ||
+       !Array.isArray(s.queue) ||
+       !s.alarmPlan ||
+       !Array.isArray(s.alarmPlan.devices)) {
+      return newState();
+    }
+
+    return s;
+  } catch {
+    return newState();
+  }
+}
+
+let state = loadState();
+
+let timer = null;
+let running = false;
+let toastTimer = null;
+
+function save() {
+  try {
+    localStorage.setItem(
+      SAVE_KEY,
+      JSON.stringify(state)
+    );
+    return true;
+  } catch {
+    toast("게임 저장에 실패했어요.");
+    return false;
+  }
+}
+
+function money(n) {
+  return n.toLocaleString("ko-KR") + "원";
+}
+
+function toast(text) {
+  $("toast").textContent = text;
+  $("toast").classList.remove("hidden");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+    $("toast").classList.add("hidden");
+  },2500);
+}
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => {
+    s.classList.toggle("active",s.id === id);
+  });
+}
+
+function totalMoney() {
+  return state.transport + state.alarmMoney;
+}
+
+/* =============================
+   2. 게임 시작
+============================= */
+
+$("startBtn").onclick = () => {
+  showScreen("game");
+  startGame();
+};
+
+function startGame() {
+  if(running) return;
+
+  running = true;
+  renderAll();
+  showPending();
+
+  timer = setInterval(() => {
+    tick();
+  },HOUR_MS);
+}
+
+/* =============================
+   3. 시간 진행
+============================= */
+
+function tick() {
+  if(state.finished || state.pending) return;
+
+  state.hour++;
+
+  if(state.hour >= 24) {
+    state.hour = 0;
+    state.day++;
+
+    if(state.day > 7) {
+      finishWeek();
+      return;
+    }
+
+    addLog("🌅 새로운 하루가 시작됐어요!");
+  }
+
+  triggerTimeEvents();
+
+  renderAll();
+  save();
+}
+
+function triggerTimeEvents() {
+  const day = state.day;
+  const hour = state.hour;
+  const weekday = day <= 5;
+
+  // 아침 알람
+  if(hour === state.alarmPlan.hour) {
+    state.alarmPlan.devices.forEach(id => {
+      state.queue.push({
+        type:"alarm",
+        device:id
+      });
+    });
+  }
+
+  // 평일 등교 여부
+  if(hour === 8 && weekday) {
+    state.queue.push({type:"school"});
+  }
+
+  // 담임 선생님 연락
+  if(hour === 10 && weekday &&
+     state.attendance[day] === "absent") {
+    state.queue.push({type:"teacher"});
+  }
+
+  // 저녁 알람 설정
+  if(hour === 20 && day < 7) {
+    state.queue.push({type:"evening"});
+  }
+
+  showPending();
+}
+
+/* =============================
+   4. 이벤트 시스템
+============================= */
+
+function showPending() {
+  if(state.finished) return;
+
+  if(!state.pending && state.queue.length) {
+    state.pending = state.queue.shift();
+    save();
+  }
+
+  if(!state.pending) {
+    $("eventModal").classList.add("hidden");
+    return;
+  }
+
+  const event = state.pending;
+
+  $("eventModal").classList.remove("hidden");
+
+  $("alarmSettings").classList.add("hidden");
+
+  const actions = $("modalActions");
+  actions.replaceChildren();
+
+  if(event.type === "alarm") {
+    renderAlarmEvent(event,actions);
+  } else if(event.type === "school") {
+    renderSchoolEvent(actions);
+  } else if(event.type === "teacher") {
+    renderTeacherEvent(actions);
+  } else if(event.type === "evening") {
+    renderEveningEvent(actions);
+  }
+
+  save();
+}
+
+function addAction(text,style,fn) {
+  const button = document.createElement("button");
+
+  button.className = "btn full " + style;
+  button.textContent = text;
+  button.onclick = fn;
+
+  $("modalActions").appendChild(button);
+}
+
+function finishEvent() {
+  state.pending = null;
+  save();
+  showPending();
+  renderAll();
+}
+
+/* =============================
+   5. 알람 이벤트
+============================= */
+
+function renderAlarmEvent(event) {
+  const device = DEVICES[event.device];
+
+  $("modalIcon").textContent = device.emoji;
+
+  $("modalTitle").textContent =
+    "🔔 " + device.name + " 알람!";
+
+  $("modalDescription").textContent =
+    `${device.name}에서 알람이 울리고 있어요!\n` +
+    "알람을 끄면 가상 보너스 100원을 획득해요.";
+
+  addAction(
+    "🔕 알람 끄기 (+100원)",
+    "",
+    () => {
+      state.alarmMoney += ALARM_REWARD;
+
+      addLog(
+        `${device.emoji} ${device.name} 알람 해제! ` +
+        "+100원 획득"
+      );
+
+      animateMoney();
+      toast("💰 알람 보너스 +100원!");
+
+      finishEvent();
+    }
+  );
+
+  addAction(
+    "😴 알람 무시하기",
+    "btn-light",
+    () => {
+      addLog(device.name + " 알람을 무시했어요.");
+      finishEvent();
+    }
+  );
+}
+
+/* =============================
+   6. 등교 선택 이벤트
+============================= */
+
+function renderSchoolEvent() {
+  $("modalIcon").textContent = "🏫";
+
+  $("modalTitle").textContent =
+    "오전 8시! 학교 갈 시간!";
+
+  $("modalDescription").textContent =
+    "오늘 학교에 갈까요?\n" +
+    "게임에서는 등교하지 않으면 교통비 " +
+    "2,000원을 가상으로 절약합니다.";
+
+  addAction(
+    "😴 학교 안 가고 계속 자기",
+    "",
+    () => {
+      if(!state.attendance[state.day]) {
+        state.attendance[state.day] = "absent";
+        state.absences++;
+        state.transport += DAILY_TRANSPORT;
+
+        addLog(
+          "😴 결석 선택! 교통비 2,000원 가상 절약"
+        );
+
+        animateMoney();
+      }
+
+      finishEvent();
+    }
+  );
+
+  addAction(
+    "🎒 학교 가기 (교통비 사용)",
+    "btn-light",
+    () => {
+      state.attendance[state.day] = "school";
+
+      addLog("🎒 학교에 등교했어요!");
+
+      toast("학교에 도착했어요! 🏫");
+      finishEvent();
+    }
+  );
+}
+
+/* =============================
+   7. 담임 선생님 연락
+============================= */
+
+function renderTeacherEvent() {
+  $("modalIcon").textContent = "📞";
+
+  $("modalTitle").textContent =
+    "🚨 담임 선생님 전화!";
+
+  $("modalDescription").textContent =
+    "선생님: 학생, 오늘 학교에 왜 안 왔니?\n" +
+    "어떻게 대응할까요?";
+
+  addAction(
+    "📞 결석 사실 알리기",
+    "",
+    () => {
+      addLog(
+        "📞 선생님에게 결석 사실을 알렸어요."
+      );
+
+      toast("선생님께 결석 사실을 전달했어요.");
+      finishEvent();
+    }
+  );
+
+  addAction(
+    "📵 전화 무시하기",
+    "btn-red",
+    () => {
+      addLog(
+        "📵 선생님 전화를 무시했어요. " +
+        "학교에서 연락을 다시 시도합니다."
+      );
+
+      toast("⚠️ 연락을 무시해도 결석 문제는 남아요.");
+      finishEvent();
+    }
+  );
+}
+
+/* =============================
+   8. 저녁 알람 설정
+============================= */
+
+function renderEveningEvent() {
+  $("modalIcon").textContent = "🌙";
+
+  $("modalTitle").textContent =
+    "오늘도 하루가 끝나가요!";
+
+  $("modalDescription").textContent =
+    "내일 아침 알람을 설정하세요.\n" +
+    "여러 기기에 알람을 설정할 수 있어요.";
+
+  $("alarmSettings").classList.remove("hidden");
+
+  $("alarmHour").value = state.alarmPlan.hour;
+
+  document.querySelectorAll(
+    ".device-option input"
+  ).forEach(input => {
+    input.checked =
+      state.alarmPlan.devices.includes(input.value);
+  });
+
+  addAction(
+    "✅ 내일 알람 설정 완료",
+    "",
+    () => {
+      const hour = Number($("alarmHour").value);
+
+      if(!Number.isInteger(hour) ||
+         hour < 5 || hour > 9) {
+        toast("알람 시간은 오전 5시~9시 사이로 입력하세요.");
+        return;
+      }
+
+      const devices = [
+        ...document.querySelectorAll(
+          ".device-option input:checked"
+        )
+      ].map(input => input.value);
+
+      if(devices.length === 0) {
+        toast("알람 기기를 하나 이상 선택해 주세요.");
+        return;
+      }
+
+      state.alarmPlan = {
+        hour,
+        devices
+      };
+
+      addLog(
+        `🌙 내일 오전 ${hour}시에 ` +
+        `${devices.length}개 알람 설정 완료`
+      );
+
+      toast("내일 아침 알람 준비 완료! ⏰");
+      finishEvent();
+    }
+  );
+
+  addAction(
+    "💤 오늘은 알람 설정 안 하기",
+    "btn-light",
+    () => {
+      state.alarmPlan = {
+        hour:7,
+        devices:[]
+      };
+
+      addLog("🌙 내일은 알람 없이 자기로 했어요.");
+      finishEvent();
+    }
+  );
+}
+
+/* =============================
+   9. 주간 결과
+============================= */
+
+function finishWeek() {
+  state.finished = true;
+  state.pending = {type:"result"};
+  save();
+  renderAll();
+
+  $("eventModal").classList.remove("hidden");
+  $("alarmSettings").classList.add("hidden");
+
+  $("modalIcon").textContent = "🏁";
+  $("modalTitle").textContent = "7일간의 결과 발표!";
+
+  $("modalDescription").textContent =
+    `결석: ${state.absences}일\n` +
+    `가상 교통비 절약: ${money(state.transport)}\n` +
+    `알람 보너스: ${money(state.alarmMoney)}\n` +
+    `총 금액: ${money(totalMoney())}\n\n` +
+    "하지만 실제 무단결석은 학업과 출결에 " +
+    "불이익을 줄 수 있어요. " +
+    "돈을 아끼려면 교통비 절약이나 " +
+    "예산 관리처럼 현실적인 방법을 찾아봐요!";
+
+  $("modalActions").replaceChildren();
+
+  addAction(
+    "🔄 새로운 일주일 시작하기",
+    "",
+    resetGame
+  );
+}
+
+/* =============================
+   10. 화면 렌더링
+============================= */
+
+function renderAll() {
+  $("totalMoney").textContent = money(totalMoney());
+  $("transportMoney").textContent = money(state.transport);
+  $("alarmMoney").textContent = money(state.alarmMoney);
+  $("absenceCount").textContent = state.absences + "일";
+
+  const dayIndex = Math.min(state.day-1,6);
+  const dayName = WEEKDAYS[dayIndex];
+
+  const hourText =
+    String(state.hour).padStart(2,"0") + ":00";
+
+  $("clockTime").textContent = hourText;
+  $("clockDay").textContent = dayName;
+
+  $("timeFill").style.width =
+    (state.hour/24*100)+"%";
+
+  renderRoom();
+  renderWeek();
+  renderLogs();
+
+  $("timeStatus").textContent = state.pending
+    ? "이벤트 선택 중 · 게임 시간이 잠시 멈췄어요."
+    : "1.5초마다 1시간씩 시간이 흘러요.";
+}
+
+function renderRoom() {
+  const hour = state.hour;
+  const night = hour >= 19 || hour < 6;
+
+  $("bedroom").classList.toggle("night",night);
+
+  $("roomWindow").textContent =
+    night ? "🌙" : hour < 12 ? "☀️" : "🌤️";
+
+  const attendance = state.attendance[state.day];
+
+  if(state.day > 7) {
+    $("bed").textContent = "🏁";
+    $("sleepText").textContent = "일주일 종료!";
+    $("eventMessage").textContent =
+      "일주일간의 시뮬레이션이 끝났어요.";
+  } else if(attendance === "school" &&
+            hour >= 8 && hour < 16) {
+    $("bed").textContent = "🎒🏫";
+    $("sleepText").textContent = "학교에 간 상태!";
+    $("eventMessage").textContent =
+      "학교에서 수업을 듣는 중이에요.";
+  } else if(attendance === "absent" &&
+            hour >= 8 && hour < 18) {
+    $("bed").textContent = "😴🛏️";
+    $("sleepText").textContent = "이불 밖은 위험해...";
+    $("eventMessage").textContent =
+      "가상 교통비 2,000원이 적립되었어요.";
+  } else if(hour >= 20 || hour < 6) {
+    $("bed").textContent = "🌙🛏️";
+    $("sleepText").textContent = "취침 시간! 💤";
+    $("eventMessage").textContent =
+      "내일 아침 알람을 준비할 시간이에요.";
+  } else {
+    $("bed").textContent = "😊🛏️";
+    $("sleepText").textContent = "오늘은 무슨 일이 생길까?";
+    $("eventMessage").textContent =
+      "게임 속 하루가 흘러가고 있어요.";
+  }
+
+  $("bed").classList.toggle(
+    "sleeping",
+    attendance === "absent" || night
+  );
+}
+
+function renderWeek() {
+  const box = $("weekDays");
+  box.replaceChildren();
+
+  WEEKDAYS.forEach((name,index) => {
+    const day = index+1;
+
+    const item = document.createElement("div");
+    item.className = "week-day";
+
+    if(day < state.day) {
+      item.classList.add("finished");
+    }
+
+    if(day === state.day) {
+      item.classList.add("active");
+    }
+
+    const icon = document.createElement("strong");
+
+    if(state.attendance[day] === "absent") {
+      icon.textContent = "😴";
+    } else if(state.attendance[day] === "school") {
+      icon.textContent = "🎒";
+    } else if(day > 5) {
+      icon.textContent = "🌈";
+    } else {
+      icon.textContent = "📅";
+    }
+
+    const label = document.createElement("span");
+    label.textContent = name.replace("요일","");
+
+    item.append(icon,label);
+    box.appendChild(item);
+  });
+}
+
+function addLog(text) {
+  const dayName = WEEKDAYS[
+    Math.min(state.day-1,6)
+  ];
+
+  const time =
+    String(state.hour).padStart(2,"0")+":00";
+
+  state.logs.unshift({
+    time:dayName+" "+time,
+    text
+  });
+
+  if(state.logs.length > 50) {
+    state.logs.pop();
+  }
+
+  save();
+}
+
+function renderLogs() {
+  const box = $("gameLogs");
+  box.replaceChildren();
+
+  if(!state.logs.length) {
+    const p = document.createElement("p");
+    p.className = "muted";
+    p.textContent = "아직 발생한 사건이 없어요.";
+    box.appendChild(p);
+    return;
+  }
+
+  state.logs.forEach(log => {
+    const item = document.createElement("div");
+    item.className = "log-item";
+
+    const time = document.createElement("span");
+    time.className = "log-time";
+    time.textContent = log.time;
+
+    const text = document.createElement("span");
+    text.textContent = log.text;
+
+    item.append(time,text);
+    box.appendChild(item);
+  });
+}
+
+/* =============================
+   11. 적립 시각 효과
+============================= */
+
+function animateMoney() {
+  const number = $("totalMoney");
+
+  number.classList.remove("pop");
+  void number.offsetWidth;
+  number.classList.add("pop");
+
+  for(let i=0;i<7;i++) {
+    const element = document.createElement("div");
+    element.className = "floating-money";
+    element.textContent = i%2 === 0 ? "💰" : "💚";
+
+    element.style.left =
+      (25+Math.random()*50)+"%";
+
+    element.style.top =
+      (35+Math.random()*30)+"%";
+
+    document.body.appendChild(element);
+
+    setTimeout(() => element.remove(),1100);
+  }
+
+  renderAll();
+}
+
+/* =============================
+   12. 초기화
+============================= */
+
+function resetGame() {
+  if(workReset()) {
+    state = newState();
+
+    save();
+
+    $("eventModal").classList.add("hidden");
+
+    renderAll();
+
+    toast("새로운 일주일을 시작해요! 💚");
+  }
+}
+
+function workReset() {
+  return state.finished ||
+    confirm(
+      "게임을 처음부터 다시 시작할까요?\n" +
+      "기존 기록이 초기화됩니다."
+    );
+}
+
+$("resetBtn").onclick = resetGame;
+
+/* =============================
+   13. 초기 실행
+============================= */
+
+renderAll();
+
+if(state.finished) {
+  // 결과 화면은 게임 입장 후 다시 확인
+  $("startBtn").textContent =
+    "🏁 지난 게임 결과 보기";
+}
+
+const originalStart = $("startBtn").onclick;
+
+$("startBtn").onclick = () => {
+  originalStart();
+
+  if(state.finished) {
+    finishWeek();
+  }
+};
+
+</script>
+</body>
+</html>
